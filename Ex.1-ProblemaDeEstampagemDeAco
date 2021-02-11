@@ -1,0 +1,13 @@
+pip install mip
+from mip import Model, xsum, MAXIMIZE, INTEGER, MINIMIZE  
+nvar = 2
+obj_coef = [15,40]
+g_coef = [[1,4],[1,-4]]
+g_val = [4080,0]
+m = Model('aço',sense=MAXIMIZE)
+x = [m.add_var(name='x{}'.format(int(i)),var_type=INTEGER,lb=0)for i in range(nvar)]
+m.objective = xsum(obj_coef[i]*x[i] for i in range(nvar))
+for i in range(len(g_val)):
+  m += xsum(g_coef[i][j]*x[j] for j in range(nvar)) <= g_val[i]
+m.optimize()
+print('Optimal Solution: {}'.format([x[i].x for i in range(nvar)])) 
